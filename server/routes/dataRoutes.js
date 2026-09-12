@@ -4,6 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import XLSX from "xlsx";
 import { spawn } from "child_process";
+import db from "../db.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -35,7 +37,75 @@ const upload = multer({
   },
 });
 
-router.post("/upload", upload.single("file"), (req, res) => {
+router.get("/datasets", authMiddleware, async (req, res) => {
+  try {
+    const [datasets] = await db.execute(
+      `SELECT id, file_name, file_type, total_rows, total_columns, created_at
+       FROM datasets
+       WHERE user_id = ?
+       ORDER BY id DESC`,
+       [req.user.id]
+    );
+
+    res.json({
+      success: true,
+      datasets: datasets,
+    });
+  } catch (error) {
+    console.error("Failed to fetch datasets:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Could not fetch datasets.",
+    });
+  }
+});
+
+router.get("/datasets/:id", authMiddleware, async (req, res) => {
+  try {
+    const datasetId = req.params.id;
+
+    const [datasets] = await db.execute(
+      `SELECT *
+       FROM datasets
+       WHERE id = ? AND user_id = ?`,
+      [datasetId, req.user.id]
+    );
+
+    if (datasets.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Dataset not found.",
+      });
+    }
+
+    const [analysisResults] = await db.execute(
+      `SELECT analysis_data, created_at
+       FROM analysis_results
+       WHERE dataset_id = ?
+       ORDER BY id DESC
+       LIMIT 1`,
+      [datasetId]
+    );
+
+    res.json({
+      success: true,
+      dataset: datasets[0],
+      analysis: analysisResults.length > 0
+        ? analysisResults[0].analysis_data
+        : null,
+    });
+  } catch (error) {
+    console.error("Failed to fetch dataset:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Could not fetch dataset.",
+    });
+  }
+});
+
+router.post("/upload", authMiddleware, upload.single("file"), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({
       success: false,
@@ -50,6 +120,23 @@ router.post("/upload", upload.single("file"), (req, res) => {
     const worksheet = workbook.Sheets[sheetName];
 
     const data = XLSX.utils.sheet_to_json(worksheet);
+
+    const extension = path.extname(req.file.originalname).toLowerCase();
+    let fileType = extension.replace(".","").toUpperCase();
+    const [insertResult] = await db.execute(
+      `INSERT INTO datasets
+      (file_name, file_type, total_rows, total_columns, raw_data, user_id)
+      VALUES(?, ?, ?, ?, ?, ?)`,
+      [
+        req.file.originalname,
+        fileType,
+        data.length,
+        data.length > 0 ? Object.keys(data[0]).length : 0,
+        JSON.stringify(data),
+        req.user.id,
+      ]
+    );
+    const datasetId = insertResult.insertId;
 
     const pythonProcess = spawn("python", ["python/analyzer.py"], {
       cwd: path.join(__dirname, "../.."),
@@ -66,7 +153,7 @@ router.post("/upload", upload.single("file"), (req, res) => {
       pythonError += chunk.toString();
     });
 
-    pythonProcess.on("close", (code) => {
+    pythonProcess.on("close", async (code) => {
       if (code !== 0) {
         console.error("Python error:", pythonError);
 
@@ -78,6 +165,12 @@ router.post("/upload", upload.single("file"), (req, res) => {
 
       try {
         const analysis = JSON.parse(pythonOutput);
+        await db.execute(
+          `INSERT INTO analysis_results
+          (dataset_id, analysis_data)
+          VALUES(?, ?)`,
+          [datasetId, JSON.stringify(analysis)]
+        );
 
         res.json({
           success: true,
@@ -119,6 +212,44 @@ router.post("/upload", upload.single("file"), (req, res) => {
     res.status(500).json({
       success: false,
       message: "The file was uploaded but could not be read.",
+    });
+  }
+});
+
+router.post("/sql/test", async (req, res) => {
+  try {
+    const { host, user, password, database } = req.body;
+
+    if (!host || !user || !database) {
+      return res.status(400).json({
+        success: false,
+        message: "Host, user and database are required.",
+      });
+    }
+
+    const mysql = await import("mysql2/promise");
+
+    const connection = await mysql.default.createConnection({
+      host,
+      user,
+      password,
+      database,
+    });
+
+    await connection.query("SELECT 1");
+
+    await connection.end();
+
+    res.json({
+      success: true,
+      message: "SQL database connected successfully.",
+    });
+  } catch (error) {
+    console.error("SQL connection error:", error.message);
+
+    res.status(500).json({
+      success: false,
+      message: "Could not connect to SQL database.",
     });
   }
 });

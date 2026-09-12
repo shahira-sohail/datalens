@@ -2,14 +2,110 @@ import { useEffect, useState } from "react";
 
 function DataPreview() {
   const [dataset, setDataset] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const savedDataset = sessionStorage.getItem("datalensDataset");
+    const loadDataset = async () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const datasetId = params.get("id");
 
-    if (savedDataset) {
-      setDataset(JSON.parse(savedDataset));
-    }
+        if (!datasetId) {
+          const savedDataset = sessionStorage.getItem("datalensDataset");
+
+          if (savedDataset) {
+            setDataset(JSON.parse(savedDataset));
+          }
+
+          setLoading(false);
+          return;
+        }
+
+        const token = sessionStorage.getItem("datalensToken");
+        const response = await fetch(
+          `http://localhost:5000/api/data/datasets/${datasetId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Failed to load dataset.");
+        }
+
+        const rawData = result.dataset.raw_data
+          ? typeof result.dataset.raw_data === "string"
+            ? JSON.parse(result.dataset.raw_data)
+            : result.dataset.raw_data
+          : [];
+
+        const columnNames =
+          rawData.length > 0 ? Object.keys(rawData[0]) : [];
+
+        setDataset({
+          sheetName: result.dataset.file_name,
+          rows: result.dataset.total_rows,
+          columns: result.dataset.total_columns,
+          columnNames: columnNames,
+          preview: rawData.slice(0, 10),
+          data: rawData,
+        });
+
+        sessionStorage.setItem(
+          "datalensDataset",
+          JSON.stringify({
+            sheetName: result.dataset.file_name,
+            rows: result.dataset.total_rows,
+            columns: result.dataset.total_columns,
+            columnNames: columnNames,
+            preview: rawData.slice(0, 10),
+            data: rawData,
+          })
+        );
+
+        if (result.analysis) {
+          sessionStorage.setItem(
+            "datalensAnalysis",
+            JSON.stringify(result.analysis)
+          );
+        }
+      } catch (error) {
+        console.error("Failed to load dataset:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDataset();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="data-preview-page">
+        <div className="preview-empty">
+          <h2>Loading dataset...</h2>
+          <p>Please wait while DataLens retrieves your dataset.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="data-preview-page">
+        <div className="preview-empty">
+          <h2>Unable to load dataset</h2>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!dataset) {
     return (
@@ -29,22 +125,18 @@ function DataPreview() {
 
   return (
     <div className="data-preview-page">
-
-      {/* Page Header */}
       <div className="page-header">
         <div>
           <h2>Data Preview</h2>
           <p>
-            Review the structure and sample records of your uploaded dataset.
+            Review the structure and sample records of your dataset.
           </p>
         </div>
       </div>
 
-      {/* Dataset Information */}
       <div className="dataset-stats">
-
         <div className="stat-card">
-          <span>Sheet</span>
+          <span>Dataset</span>
           <strong>{dataset.sheetName}</strong>
         </div>
 
@@ -57,10 +149,8 @@ function DataPreview() {
           <span>Total Columns</span>
           <strong>{dataset.columns}</strong>
         </div>
-
       </div>
 
-      {/* Column Names */}
       <div className="columns-card">
         <div className="card-heading">
           <h3>Columns</h3>
@@ -76,13 +166,13 @@ function DataPreview() {
         </div>
       </div>
 
-      {/* Data Table */}
       <div className="table-card">
-
         <div className="card-heading">
           <div>
             <h3>Sample Data</h3>
-            <p>Showing the first {rows.length} rows of your dataset.</p>
+            <p>
+              Showing the first {rows.length} rows of your dataset.
+            </p>
           </div>
         </div>
 
@@ -101,7 +191,8 @@ function DataPreview() {
                 <tr key={rowIndex}>
                   {dataset.columnNames.map((column, columnIndex) => (
                     <td key={columnIndex}>
-                      {row[column] !== undefined && row[column] !== null
+                      {row[column] !== undefined &&
+                      row[column] !== null
                         ? String(row[column])
                         : "—"}
                     </td>
@@ -111,9 +202,7 @@ function DataPreview() {
             </tbody>
           </table>
         </div>
-
       </div>
-
     </div>
   );
 }

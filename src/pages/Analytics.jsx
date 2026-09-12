@@ -36,6 +36,15 @@ function Analytics() {
     }
   }, []);
 
+  const PIE_COLORS = [
+    "#6366f1",
+    "#22c55e",
+    "#f59e0b",
+    "#ef4444",
+    "#06b6d4",
+    "#8b5cf6",
+  ];
+
   const savedDataset = sessionStorage.getItem("datalensDataset");
   const dataset = savedDataset ? JSON.parse(savedDataset) : null;
   const chartData = [];
@@ -496,7 +505,10 @@ function Analytics() {
                     label
                   >
                     {chartData.map((entry,index) => (
-                      <Cell key={`cell=${index}`} />
+                      <Cell 
+                        key={`cell=${index}`}
+                        fill={PIE_COLORS[index % PIE_COLORS.length]}
+                      />
                     ))}
                   </Pie>
                 </PieChart>

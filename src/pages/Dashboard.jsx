@@ -1,5 +1,5 @@
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+console.log("Dashboard component loaded");
 import {
   Upload,
   Database,
@@ -13,7 +13,38 @@ import {
 } from "lucide-react";
 
 function Dashboard() {
+  console.log("Dashboard render started");
   const [selectedFile, setSelectedFile] = useState(null);
+  const[uploading, setUploading] = useState(false);
+
+  const [datasets, setDatasets] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredDatasets = datasets.filter((dataset) => 
+    dataset.file_name?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  useEffect(() => {
+    const fetchDatasets = async () => {
+      try{
+        const token = sessionStorage.getItem("datalensToken");
+        const response = await fetch(
+          "http://localhost:5000/api/data/datasets",
+
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const result = await response.json();
+        if(result.success){
+          setDatasets(result.datasets);
+        }
+      }catch(error){
+        console.log("Failed to load datasets:",error);
+      }
+    };
+    fetchDatasets();
+  },[]);
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if(!file){
@@ -22,11 +53,17 @@ function Dashboard() {
     setSelectedFile(file);
     const formData = new FormData();
     formData.append("file",file);
+    
     try{
+      setUploading(true);
+      const token = sessionStorage.getItem("datalensToken");
       const response = await fetch(
         "http://localhost:5000/api/data/upload",
         {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           body: formData,
         }
       );
@@ -47,12 +84,28 @@ function Dashboard() {
     } catch(error){
       console.error("Upload error:", error);
     }
+    finally{
+      setUploading(false);
+    }
   };
   const removeFile = () => {
     setSelectedFile(null);
+    setUploading(false);
   };
+  console.log("Dashboard render reached return");
 
   return (
+    <>
+      <div 
+        style={{
+          color: "red",
+          fontSize: "30px",
+          fontWeight: "bold",
+          padding: "30px",
+        }}
+      >
+        Dashboard 
+      </div>
     <div className="dashboard">
 
       {/* Welcome */}
@@ -83,24 +136,41 @@ function Dashboard() {
         </p>
 
         {!selectedFile ? (
-          <label className="upload-main-button">
+          <label 
+            className="upload-main-button"
+            style={{
+              pointerEvents: uploading ? "none" : "auto",
+              // opacity: uploading  0.6 : 1,
+            }}
+          >
             <Upload size={17} />
-            Choose a file
+            {uploading ? "Uploading..." : "Choose a file"}
             <input 
               type="file"
               accept=".csv, .xlsx, .json"
               hidden
               onChange={handleFileChange}
+              disabled={uploading}
             />
           </label>
         ) : (
           <div className="selected-file">
             <div className="selected-file-info">
-              <CheckCircle2 size={18} />
+              {uploading ? (
+                <Upload size={18} />
+              ) : (
+                <CheckCircle2 size={18} />
+              )}
               <div>
-                <strong>{selectedFile.name}</strong>
+                <strong>
+                  {uploading ? "Uploading..." : selectedFile.name}
+                </strong>
                 <span>
-                  {(selectedFile.size / 1024).toFixed(1)}KB
+                  {
+                    uploading
+                    ? "Please wait..."
+                    : `${(selectedFile.size / 1024).toFixed(1)}KB`
+                  }
                 </span>
               </div>
             </div>
@@ -108,6 +178,7 @@ function Dashboard() {
               className="remove-file"
               onClick={removeFile}
               title="Remove file"
+              disabled={uploading}
             >
               <X size={17} />
             </button>
@@ -213,6 +284,60 @@ function Dashboard() {
 
       </div>
 
+      <div className="datasets-section">
+        <div className="section-heading">
+          <div>
+            <h3>Recent Datasets</h3>
+            <p>Datasets previously uploaded to Datalens.</p>
+          </div>
+        </div>
+
+
+        <div className="dataset-search">
+          <input 
+            type="text"
+            placeholder="Search datasests..."
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+          />
+        </div>
+
+        {filteredDatasets.length === 0 ? (
+          <div className="datasets-empty">
+            <p>
+              {datasets.length === 0
+                ? "No datasets uploaded yet."
+                : "No datasets found."}
+            </p>
+          </div>
+        ) : (
+          <div className="datasets-list">
+            {filteredDatasets.map((dataset) => (
+              <div className="dataset-item" key={dataset.id}>
+                <div className="dataset-info">
+                  <strong>{dataset.file_name}</strong>
+                  <span>
+                    {dataset.file_type} · {dataset.total_rows} rows · {" "}
+                    {dataset.total_columns} columns
+                  </span>
+                </div>
+
+                <span className="dataset-date">
+                  {new Date(dataset.created_at).toLocaleDateString()}
+                </span>
+                <button
+                  className="dataset-open-button"
+                  onClick={() => {
+                    window.location.href = `/data-preview?id=${dataset.id}`;
+                  }}
+                >
+                  Open
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Empty workspace information */}
       <div className="workspace-note">
@@ -234,7 +359,8 @@ function Dashboard() {
       </div>
 
     </div>
-  );
+  </>
+    );
 }
 
 export default Dashboard;
