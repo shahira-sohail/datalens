@@ -10,7 +10,7 @@ import db from "./db.js";
 
 const app = express();
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -33,6 +33,6 @@ db.query("SELECT 1")
     console.error("MySQL connection failed:", error.message);
   });
 
-app.listen(PORT, () => {
-  console.log(`DataLens server running on http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`DataLens server running on ${PORT}`);
 });

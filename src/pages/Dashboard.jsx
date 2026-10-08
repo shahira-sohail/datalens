@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./Dashboard.css";
 console.log("Dashboard component loaded");
 import {
   Upload,
@@ -95,17 +96,6 @@ function Dashboard() {
   console.log("Dashboard render reached return");
 
   return (
-    <>
-      <div 
-        style={{
-          color: "red",
-          fontSize: "30px",
-          fontWeight: "bold",
-          padding: "30px",
-        }}
-      >
-        Dashboard 
-      </div>
     <div className="dashboard">
 
       {/* Welcome */}
@@ -359,7 +349,6 @@ function Dashboard() {
       </div>
 
     </div>
-  </>
     );
 }
 

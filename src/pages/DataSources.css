@@ -1,0 +1,222 @@
+/* =========================
+   Data Sources
+========================= */
+
+.data-sources-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+
+.data-sources-header {
+  margin-bottom: 24px;
+}
+
+.data-sources-page h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.data-sources-page .data-sources-header p {
+  margin: 7px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* Source Grid */
+
+.data-source-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* Source Card */
+
+.data-source-card {
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.data-source-card:hover {
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+}
+
+/* Icon */
+
+.data-source-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 14px;
+
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+/* Status */
+
+.data-source-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 5px 8px;
+
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #64748b;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.data-source-status.available {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+/* Card Text */
+
+.data-source-card h3 {
+  margin: 16px 0 7px;
+
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.data-source-card p {
+  min-height: 58px;
+
+  margin: 0 0 18px;
+
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Button */
+
+.data-source-button {
+  width: 100%;
+
+  min-height: 38px;
+  padding: 8px 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+
+  background: #eff6ff;
+  color: #2563eb;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.data-source-button:hover:not(:disabled) {
+  background: #dbeafe;
+}
+
+.data-source-button:disabled {
+  border-color: #e2e8f0;
+  background: #f8fafc;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* =========================
+   Dark Mode
+========================= */
+
+.app.dark .data-sources-page h1 {
+  color: #f8fafc;
+}
+
+.app.dark .data-sources-page .data-sources-header p {
+  color: #94a3b8;
+}
+
+.app.dark .data-source-card {
+  background: #111827;
+  border-color: #1f2937;
+}
+
+.app.dark .data-source-card:hover {
+  border-color: #334155;
+}
+
+.app.dark .data-source-icon {
+  background: #1e3a8a;
+  color: #bfdbfe;
+}
+
+.app.dark .data-source-status {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+.app.dark .data-source-status.available {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+
+.app.dark .data-source-card h3 {
+  color: #f8fafc;
+}
+
+.app.dark .data-source-card p {
+  color: #94a3b8;
+}
+
+.app.dark .data-source-button {
+  background: #1e3a8a;
+  border-color: #334155;
+  color: #bfdbfe;
+}
+
+.app.dark .data-source-button:hover:not(:disabled) {
+  background: #1e40af;
+}
+
+.app.dark .data-source-button:disabled {
+  background: #1e293b;
+  border-color: #334155;
+  color: #64748b;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 900px) {
+  .data-source-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .data-source-card {
+    padding: 18px;
+  }
+}

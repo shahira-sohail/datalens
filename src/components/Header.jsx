@@ -1,5 +1,6 @@
 import { Sun, Moon, FileText, Upload, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import "./Header.css";
 
 function Header({ darkMode, setDarkMode }) {
   const navigate = useNavigate();

@@ -1,0 +1,496 @@
+/* =========================
+   Analytics Page
+========================= */
+
+.analytics-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* =========================
+   Page Header
+========================= */
+
+.analytics-page .page-header {
+  margin-bottom: 24px;
+}
+
+.analytics-page .page-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.analytics-page .page-header p {
+  margin: 7px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+
+/* =========================
+   Statistics Cards
+========================= */
+
+.analytics-page .dataset-stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.analytics-page .stat-card {
+  min-width: 0;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.analytics-page .stat-card span {
+  display: block;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.analytics-page .stat-card strong {
+  display: block;
+  margin-top: 8px;
+  color: #0f172a;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+
+/* =========================
+   Generic Cards
+========================= */
+
+.analytics-page .columns-card,
+.analytics-page .table-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+
+/* =========================
+   Card Heading
+========================= */
+
+.analytics-page .card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.analytics-page .card-heading h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.analytics-page .card-heading p {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* =========================
+   Column Tags
+========================= */
+
+.analytics-page .column-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 18px 20px;
+}
+
+.analytics-page .column-tag {
+  padding: 6px 10px;
+  border: 1px solid #dbeafe;
+  border-radius: 7px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+
+/* =========================
+   Data Quality
+========================= */
+
+.quality-section {
+  margin-bottom: 24px;
+}
+
+.analytics-page .section-heading {
+  margin-bottom: 14px;
+}
+
+.analytics-page .section-heading h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 17px;
+}
+
+.analytics-page .section-heading p {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.quality-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.quality-card {
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.quality-card span {
+  display: block;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.quality-card strong {
+  display: block;
+  margin-top: 7px;
+  color: #0f172a;
+  font-size: 24px;
+}
+
+.quality-card p {
+  margin: 5px 0 0;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+
+/* =========================
+   Tables
+========================= */
+
+.analytics-page .table-wrapper,
+.statistics-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.analytics-page table {
+  width: 100%;
+  min-width: 650px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.analytics-page th,
+.analytics-page td {
+  padding: 11px 14px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.analytics-page th {
+  background: #f8fafc;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.analytics-page td {
+  color: #334155;
+}
+
+.analytics-page tbody tr:hover {
+  background: #f8fafc;
+}
+
+.analytics-page tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* =========================
+   Empty Messages
+========================= */
+
+.empty-message {
+  margin: 0;
+  padding: 24px 20px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+
+/* =========================
+   Insights
+========================= */
+
+.insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 20px;
+}
+
+.insight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #f8fafc;
+}
+
+.insight-number {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+  background: #eff6ff;
+  color: #2563eb;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.insight-item p {
+  margin: 4px 0 0;
+  color: #475569;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* =========================
+   Chart Controls
+========================= */
+
+.chart-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.chart-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 20px 20px;
+}
+
+.chart-controls .chart-control {
+  padding: 0;
+}
+
+.chart-control label {
+  color: #475569;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.chart-control select {
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 10px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #334155;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  outline: none;
+  cursor: pointer;
+}
+
+.chart-control select:focus {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 3px #eff6ff;
+}
+
+
+/* =========================
+   Chart
+========================= */
+
+.chart-container {
+  width: 100%;
+  min-height: 400px;
+  padding: 24px 20px;
+}
+
+.chart-container .recharts-responsive-container {
+  min-height: 400px;
+}
+
+
+/* =========================
+   Dark Mode
+========================= */
+
+.app.dark .analytics-page .page-header h2,
+.app.dark .analytics-page .stat-card strong,
+.app.dark .analytics-page .card-heading h3,
+.app.dark .analytics-page .section-heading h3,
+.app.dark .quality-card strong {
+  color: #f8fafc;
+}
+
+.app.dark .analytics-page .page-header p,
+.app.dark .analytics-page .stat-card span,
+.app.dark .analytics-page .card-heading p,
+.app.dark .analytics-page .section-heading p,
+.app.dark .quality-card span,
+.app.dark .quality-card p,
+.app.dark .empty-message {
+  color: #94a3b8;
+}
+
+.app.dark .analytics-page .columns-card,
+.app.dark .analytics-page .table-card,
+.app.dark .analytics-page .stat-card,
+.app.dark .quality-card {
+  background: #111827;
+  border-color: #1f2937;
+}
+
+.app.dark .analytics-page .card-heading {
+  border-color: #1f2937;
+}
+
+.app.dark .analytics-page .column-tag {
+  background: #1e3a8a;
+  border-color: #334155;
+  color: #bfdbfe;
+}
+
+.app.dark .analytics-page th {
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+.app.dark .analytics-page td {
+  color: #cbd5e1;
+  border-color: #1f2937;
+}
+
+.app.dark .analytics-page tbody tr:hover {
+  background: #1e293b;
+}
+
+.app.dark .insight-item {
+  background: #0f172a;
+  border-color: #1f2937;
+}
+
+.app.dark .insight-number {
+  background: #1e3a8a;
+  color: #bfdbfe;
+}
+
+.app.dark .insight-item p {
+  color: #cbd5e1;
+}
+
+.app.dark .chart-controls {
+  border-color: #1f2937;
+}
+
+.app.dark .chart-control label {
+  color: #cbd5e1;
+}
+
+.app.dark .chart-control select {
+  background: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 1000px) {
+  .analytics-page .dataset-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 800px) {
+  .analytics-page {
+    max-width: 100%;
+  }
+
+  .analytics-page .dataset-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .quality-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-controls {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .analytics-page .dataset-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-page .card-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .analytics-page .column-list {
+    padding: 14px 16px;
+  }
+
+  .analytics-page th,
+  .analytics-page td {
+    padding: 10px 12px;
+  }
+
+  .chart-container {
+    padding: 18px 10px;
+  }
+}

@@ -1,0 +1,175 @@
+/* =========================
+   Top Header
+========================= */
+
+.top-header {
+  min-height: 72px;
+  padding: 16px 36px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+
+/* =========================
+   Header Title
+========================= */
+
+.header-title h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.header-title p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+
+/* =========================
+   Header Actions
+========================= */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+/* =========================
+   Icon Button
+========================= */
+
+.icon-button {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #475569;
+
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  background: #f8fafc;
+}
+
+
+/* =========================
+   Header Buttons
+========================= */
+
+.header-button {
+  min-height: 38px;
+  padding: 0 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.header-button.secondary {
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #475569;
+}
+
+.header-button.secondary:hover {
+  background: #f8fafc;
+}
+
+.header-button.primary {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.header-button.primary:hover {
+  background: #1d4ed8;
+}
+
+
+/* =========================
+   Dark Mode
+========================= */
+
+.app.dark .top-header {
+  background: #111827;
+  border-color: #1f2937;
+}
+
+.app.dark .header-title h1 {
+  color: #f8fafc;
+}
+
+.app.dark .header-title p {
+  color: #94a3b8;
+}
+
+.app.dark .icon-button,
+.app.dark .header-button.secondary {
+  background: #111827;
+  border-color: #334155;
+  color: #cbd5e1;
+}
+
+.app.dark .icon-button:hover,
+.app.dark .header-button.secondary:hover {
+  background: #1e293b;
+}
+
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 800px) {
+  .top-header {
+    padding: 14px 20px;
+  }
+
+  .header-actions {
+    gap: 7px;
+  }
+}
+
+@media (max-width: 600px) {
+  .top-header {
+    padding: 14px 16px;
+  }
+
+  .header-title p {
+    display: none;
+  }
+
+  .header-button span {
+    display: none;
+  }
+
+  .header-button {
+    width: 38px;
+    padding: 0;
+  }
+}

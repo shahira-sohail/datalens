@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./DataPreview.css";
 
 function DataPreview() {
   const [dataset, setDataset] = useState(null);

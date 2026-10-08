@@ -1,0 +1,262 @@
+/* =========================
+   Data Preview
+========================= */
+
+.data-preview-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Page Header */
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.page-header p {
+  margin: 7px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* Empty / Loading / Error */
+
+.preview-empty {
+  padding: 50px 24px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.preview-empty h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 18px;
+}
+
+.preview-empty p {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* Dataset Stats */
+
+.dataset-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  min-width: 0;
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.stat-card span {
+  display: block;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.stat-card strong {
+  display: block;
+  margin-top: 7px;
+  color: #0f172a;
+  font-size: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Generic Card */
+
+.columns-card,
+.table-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+/* Card Heading */
+
+.card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.card-heading h3 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 15px;
+}
+
+.card-heading p {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.card-heading > span {
+  color: #64748b;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+/* Columns */
+
+.column-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 18px 20px;
+}
+
+.column-tag {
+  padding: 6px 10px;
+  border: 1px solid #dbeafe;
+  border-radius: 7px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* Table */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-wrapper table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  padding: 11px 14px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table-wrapper th {
+  background: #f8fafc;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.table-wrapper td {
+  color: #334155;
+}
+
+.table-wrapper tbody tr:hover {
+  background: #f8fafc;
+}
+
+.table-wrapper tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Dark Mode */
+
+.app.dark .page-header h2,
+.app.dark .stat-card strong,
+.app.dark .card-heading h3,
+.app.dark .preview-empty h2 {
+  color: #f8fafc;
+}
+
+.app.dark .page-header p,
+.app.dark .stat-card span,
+.app.dark .card-heading p,
+.app.dark .card-heading > span,
+.app.dark .preview-empty p {
+  color: #94a3b8;
+}
+
+.app.dark .stat-card,
+.app.dark .columns-card,
+.app.dark .table-card,
+.app.dark .preview-empty {
+  background: #111827;
+  border-color: #1f2937;
+}
+
+.app.dark .card-heading {
+  border-color: #1f2937;
+}
+
+.app.dark .column-tag {
+  background: #1e3a8a;
+  border-color: #334155;
+  color: #bfdbfe;
+}
+
+.app.dark .table-wrapper th {
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+.app.dark .table-wrapper td {
+  color: #cbd5e1;
+  border-color: #1f2937;
+}
+
+.app.dark .table-wrapper tbody tr:hover {
+  background: #1e293b;
+}
+
+/* Responsive */
+
+@media (max-width: 800px) {
+  .data-preview-page {
+    max-width: 100%;
+  }
+
+  .dataset-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .card-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .column-list {
+    padding: 14px 16px;
+  }
+
+  .table-wrapper th,
+  .table-wrapper td {
+    padding: 10px 12px;
+  }
+}
