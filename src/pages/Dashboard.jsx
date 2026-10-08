@@ -12,6 +12,8 @@ import {
   CheckCircle2,
   X,
 } from "lucide-react";
+import API_BASE_URL from "../config";
+
 
 function Dashboard() {
   console.log("Dashboard render started");
@@ -28,7 +30,7 @@ function Dashboard() {
       try{
         const token = sessionStorage.getItem("datalensToken");
         const response = await fetch(
-          "http://localhost:5000/api/data/datasets",
+          `${API_BASE_URL}/api/data/datasets`,
 
           {
             headers: {
@@ -59,7 +61,7 @@ function Dashboard() {
       setUploading(true);
       const token = sessionStorage.getItem("datalensToken");
       const response = await fetch(
-        "http://localhost:5000/api/data/upload",
+        `${API_BASE_URL}/api/data/datasets`,
         {
           method: "POST",
           headers: {

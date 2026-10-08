@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./DataPreview.css";
+import API_BASE_URL from "../config";
 
 function DataPreview() {
   const [dataset, setDataset] = useState(null);
@@ -25,7 +26,7 @@ function DataPreview() {
 
         const token = sessionStorage.getItem("datalensToken");
         const response = await fetch(
-          `http://localhost:5000/api/data/datasets/${datasetId}`,
+          `${API_BASE_URL}/api/data/datasets/${datasetId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
