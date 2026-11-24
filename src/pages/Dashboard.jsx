@@ -61,7 +61,7 @@ function Dashboard() {
       setUploading(true);
       const token = sessionStorage.getItem("datalensToken");
       const response = await fetch(
-        `${API_BASE_URL}/api/data/datasets`,
+        `${API_BASE_URL}/api/data/upload`,
         {
           method: "POST",
           headers: {
