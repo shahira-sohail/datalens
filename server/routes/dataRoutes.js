@@ -6,21 +6,37 @@ import XLSX from "xlsx";
 import { spawn } from "child_process";
 import db from "../db.js";
 import authMiddleware from "../middleware/authMiddleware.js";
+import fs from "fs";
 
 const router = express.Router();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const uploadDir = path.join(__dirname, "../uploads");
+const pythonCommand =
+  process.platform === "win32" ? "python" : "python3";
+
+fs.mkdirSync(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "../uploads"));
+    cb(null, uploadDir);
   },
 
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
+
+const deleteUploadedFile = async (filePath) => {
+  try {
+    await fs.promises.unlink(filePath);
+  } catch (error) {
+    if (error.code !== "ENOENT") {
+      console.error("Failed to delete uploaded file:", error);
+    }
+  }
+};
 
 const upload = multer({
   storage,
@@ -138,12 +154,27 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
     );
     const datasetId = insertResult.insertId;
 
-    const pythonProcess = spawn("python", ["python/analyzer.py"], {
+    const pythonProcess = spawn(pythonCommand, ["python/analyzer.py"], {
       cwd: path.join(__dirname, "../.."),
     });
 
     let pythonOutput = "";
     let pythonError = "";
+    let responseHandled = false;
+
+    pythonProcess.on("error", async (error) => {
+      console.error("Failed to start Python process:", error);
+
+      if (responseHandled) return;
+      responseHandled = true;
+
+      await deleteUploadedFile(req.file.path);
+
+      res.status(500).json({
+        success: false,
+        message: "Python analysis could not be started.",
+      });
+    });
 
     pythonProcess.stdout.on("data", (chunk) => {
       pythonOutput += chunk.toString();
@@ -154,8 +185,11 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
     });
 
     pythonProcess.on("close", async (code) => {
+      if(responseHandled) return;
+      responseHandled = true;
       if (code !== 0) {
         console.error("Python error:", pythonError);
+        await deleteUploadedFile(req.file.path);
 
         return res.status(500).json({
           success: false,
@@ -165,12 +199,22 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
 
       try {
         const analysis = JSON.parse(pythonOutput);
+        if(!analysis.success){
+          console.error("Python analysis failed: ", analysis.message);
+          await deleteUploadedFile(req.file.path);
+          return res.status(500).json({
+            success: false,
+            message: analysis.message || "Data analysis failed.",
+          });
+        }
         await db.execute(
           `INSERT INTO analysis_results
           (dataset_id, analysis_data)
           VALUES(?, ?)`,
           [datasetId, JSON.stringify(analysis)]
         );
+
+        await deleteUploadedFile(req.file.path);
 
         res.json({
           success: true,
@@ -195,6 +239,7 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
         });
       } catch (error) {
         console.error("Invalid Python response:", error);
+        await deleteUploadedFile(req.file.path);
 
         res.status(500).json({
           success: false,
@@ -208,48 +253,11 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
 
   } catch (error) {
     console.error("File reading error:", error);
+    await deleteUploadedFile(req.file.path);
 
     res.status(500).json({
       success: false,
       message: "The file was uploaded but could not be read.",
-    });
-  }
-});
-
-router.post("/sql/test", async (req, res) => {
-  try {
-    const { host, user, password, database } = req.body;
-
-    if (!host || !user || !database) {
-      return res.status(400).json({
-        success: false,
-        message: "Host, user and database are required.",
-      });
-    }
-
-    const mysql = await import("mysql2/promise");
-
-    const connection = await mysql.default.createConnection({
-      host,
-      user,
-      password,
-      database,
-    });
-
-    await connection.query("SELECT 1");
-
-    await connection.end();
-
-    res.json({
-      success: true,
-      message: "SQL database connected successfully.",
-    });
-  } catch (error) {
-    console.error("SQL connection error:", error.message);
-
-    res.status(500).json({
-      success: false,
-      message: "Could not connect to SQL database.",
     });
   }
 });
