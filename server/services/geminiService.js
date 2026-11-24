@@ -1,14 +1,19 @@
+
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
-
 export async function generateAIInsight(analysisData) {
-  const prompt = `
-You are a data analysis assistant for a platform called DataLens.
+  const apiKey = process.env.GEMINI_API_KEY;
 
-Analyze the following dataset analysis results and provide clear,
+  if (!apiKey) {
+    throw new Error("AI insights are currently unavailable.");
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
+
+  const prompt = `
+You are a data analysis assistant for DataLens.
+
+Analyze the dataset analysis results and provide clear,
 practical insights for a non-technical user.
 
 Focus on:
@@ -20,8 +25,6 @@ Focus on:
 - Possible business recommendations
 
 Do not invent facts that are not present in the analysis.
-
-Return the response in simple, concise language.
 
 Dataset analysis:
 ${JSON.stringify(analysisData)}
